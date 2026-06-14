@@ -1,0 +1,1 @@
+export const popularSearches = ["Remote", "Marketing", "UI/UX", "Software Engineer", "Product Manager"];
