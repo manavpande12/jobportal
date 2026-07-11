@@ -30,8 +30,9 @@ public class JobPostMapper {
                                 .companyName(jobPost.getCompany().getName())
                                 .slug(jobPost.getCompany().getSlug())
                                 .skills(skillMapper.toResponseList(jobPost.getSkills()))
-                                .postedOn(jobPost.getPostedOn())
+                                .publishedOn(jobPost.getPublishedOn())
                                 .closedOn(jobPost.getClosedOn())
+                                .draftedOn(jobPost.getDraftedOn())
                                 .createdAt(jobPost.getCreatedAt())
                                 .updatedAt(jobPost.getUpdatedAt())
                                 .build();
@@ -45,8 +46,6 @@ public class JobPostMapper {
                                 .createdBy(user)
                                 .company(company)
                                 .skills(skills)
-                                .postedOn(null)
-                                .closedOn(null)
                                 .build();
         }
 

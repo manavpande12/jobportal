@@ -1,6 +1,6 @@
 "use client";
 import { RoleType } from "@/common/types/role.types";
-import { GET_ROUTE_TITLE } from "@/config/routes";
+import { GET_ROUTE_TITLE } from "@/common/config/routes";
 import { usePathname } from "next/navigation";
 
 const RouteTitle = ({ role }: { role: RoleType }) => {

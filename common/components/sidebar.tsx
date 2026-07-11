@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import { RoleType } from "@/common/types/role.types";
-import { GET_ROUTE_TABS, TabsTypes } from "@/config/routes";
+import { GET_ROUTE_TABS, TabsTypes } from "@/common/config/routes";
 import { useSidebar } from "../provider/SidebarProvider";
 import { useIsMobile } from "../hooks/useMobile";
 

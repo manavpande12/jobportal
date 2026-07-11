@@ -1,5 +1,5 @@
 import { RoleType } from "@/common/types/role.types";
-import { Bolt, BriefcaseBusiness, FileText, Home, LucideIcon, PenLine } from "lucide-react";
+import { Bolt, BriefcaseBusiness, CirclePlus, Home, LucideIcon, Search, Settings } from "lucide-react";
 export enum AccessType { PUBLIC, GUEST, PRIVATE }
 export type TabsTypes = { label: string; path: string; icon: LucideIcon; hide?: boolean }
 
@@ -11,8 +11,8 @@ export const STATIC_ROUTES = {
 export const PROTECTED_ROUTES: Record<RoleType, TabsTypes[]> = {
     [RoleType.JOB_SEEKER]: [
         { label: "Dashboard", path: "/job-seeker", icon: Home },
-        { label: "Jobs", path: "/jobs", icon: BriefcaseBusiness },
-        { label: "Settings", path: "/job-seeker/settings", icon: Bolt },
+        { label: "Find Jobs", path: "/jobs", icon: Search },
+        { label: "Settings", path: "/job-seeker/settings", icon: Settings },
     ],
 
     [RoleType.ADMIN]: [
@@ -22,9 +22,10 @@ export const PROTECTED_ROUTES: Record<RoleType, TabsTypes[]> = {
 
     [RoleType.RECRUITER]: [
         { label: "Dashboard", path: "/recruiter", icon: Home },
-        { label: "My Job Post", path: "/recruiter/job-posts", icon: FileText },
-        { label: "Create Job Post", path: "/recruiter/job-posts/create", icon: PenLine, hide: true },
-        { label: "Settings", path: "/recruiter/settings", icon: Bolt },
+        { label: "My Jobs", path: "/recruiter/job-posts", icon: BriefcaseBusiness },
+        { label: "Post a Job", path: "/recruiter/job-posts/create", icon: CirclePlus, hide: true },
+        { label: "Browse Jobs", path: "/jobs", icon: Search },
+        { label: "Settings", path: "/recruiter/settings", icon: Settings },
     ],
 };
 

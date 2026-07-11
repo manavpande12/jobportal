@@ -11,16 +11,17 @@ import com.mvp.jobportal.skill.dto.SkillResponse;
 
 @Builder
 public record JobPostResponse(
-        UUID id,
-        String title,
-        String description,
-        JobPostStatus status,
-        String createdBy,
-        String companyName,
-        String slug,
-        List<SkillResponse> skills,
-        LocalDateTime postedOn,
-        LocalDateTime closedOn,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt) {
+                UUID id,
+                String title,
+                String description,
+                JobPostStatus status,
+                String createdBy,
+                String companyName,
+                String slug,
+                List<SkillResponse> skills,
+                LocalDateTime publishedOn,
+                LocalDateTime draftedOn,
+                LocalDateTime closedOn,
+                LocalDateTime createdAt,
+                LocalDateTime updatedAt) {
 }

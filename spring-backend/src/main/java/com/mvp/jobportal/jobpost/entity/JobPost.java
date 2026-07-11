@@ -50,8 +50,8 @@ public class JobPost {
     @JoinTable(name = "job_post_skills", joinColumns = @JoinColumn(name = "job_post_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private Set<Skill> skills = new HashSet<>();
 
-    private LocalDateTime postedOn;
-
+    private LocalDateTime publishedOn;
+    private LocalDateTime draftedOn;
     private LocalDateTime closedOn;
 
     @CreationTimestamp

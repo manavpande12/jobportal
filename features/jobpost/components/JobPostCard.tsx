@@ -1,5 +1,5 @@
 "use client";
-import { BriefcaseBusiness, Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { CalendarDays, Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import clsx from "clsx";
 import { format } from "date-fns";
 import { Button } from "@/common/components/ui/button";
@@ -9,6 +9,8 @@ import JobPostDialog from "./JobPostDialog";
 import JobPostStatusActions from "./JobPostStatusActions";
 import { JobPostResponse } from "../types/jobpost.types";
 import { useIsMobile } from "@/common/hooks/useMobile";
+import { getPlainText } from "@/common/utils/html";
+import { getIconFromText, jobIcons } from "@/common/constants/icon";
 type Prop = {
     data: JobPostResponse;
 }
@@ -32,60 +34,134 @@ export default function JobPostCard({ data }: Prop) {
             clr = "#565667";
             break;
     }
+
+    const dateInfo = (() => {
+        switch (data.status) {
+            case "ACTIVE":
+                return {
+                    label1: "Published",
+                    value1: data.publishedOn,
+                    label2: "Modified",
+                    value2: data.updatedAt,
+                };
+
+            case "DRAFT":
+                return {
+                    label1: "Drafted",
+                    value1: data.draftedOn,
+                    label2: "Modified",
+                    value2: data.updatedAt,
+                };
+
+            case "CLOSED":
+                return {
+                    label1: "Closed",
+                    value1: data.closedOn,
+                    label2: "Modified",
+                    value2: data.updatedAt,
+                };
+
+            default:
+                return {
+                    label1: "Created",
+                    value1: data.createdAt,
+                    label2: "Modified",
+                    value2: data.updatedAt,
+                };
+        }
+    })();
+    const boxClr = { backgroundColor: clr + "10", borderColor: clr + "10", color: clr, }
+    const Icon = getIconFromText(data.title, jobIcons);
     return (
         <div className="relative flex flex-col gap-4 rounded-xl border bg-background shadow-sm transition-all hover:shadow-md sm:flex-row overflow-hidden">
             {/* Left */}
             <div className="flex items-start gap-4 flex-1 p-3 sm:p-6">
-                <div style={{ backgroundColor: clr + "10" }} className="flex size-21 shrink-0 items-center justify-center rounded-xl border bg-muted/40 sm:size-24">
-                    <BriefcaseBusiness style={{ color: clr }} className={clsx("h-8 w-8 sm:h-10 sm:w-10")} />
+                <div style={boxClr} className="flex size-21 shrink-0 items-center justify-center rounded-xl border sm:size-24">
+                    <Icon className={clsx("h-8 w-8 sm:h-10 sm:w-10")} />
                 </div>
-                <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                        <span
+                            style={{ backgroundColor: clr }}
+                            className="size-2 rounded-full shrink-0"
+                        />
+                        <span
+                            style={{ color: clr }}
+                            className="text-xs font-semibold uppercase tracking-[0.18em]"
+                        >
+                            {data.status}
+                        </span>
+                    </div>
                     <h1 className="truncate text-xl font-bold sm:text-2xl">{data.title}</h1>
-
-                    <span
-                        style={{ color: clr, backgroundColor: clr + "10" }}
-                        className="shrink-0 rounded-xl px-3 py-1 w-fit text-center text-xs font-bold whitespace-nowrap sm:text-sm"
-                    >
-                        {data.status}
-                    </span>
-
                     <div className="flex w-full gap-2 overflow-x-auto scrollbar-none pb-1">
                         {data.skills.slice(0, scount).map((s) => (
                             <div
                                 key={s.id}
-                                style={{ color: clr, backgroundColor: clr + "10" }}
+                                style={boxClr}
                                 className="shrink-0 rounded-xl px-3 py-1 text-center text-xs font-bold whitespace-nowrap sm:text-sm"
                             >
                                 {s.name}
                             </div>
                         ))}
-
                         {data.skills.length > scount && (
                             <div
-                                style={{ color: clr, backgroundColor: clr + "10" }}
+                                style={boxClr}
                                 className="shrink-0 rounded-xl px-3 py-1 text-center text-xs font-bold whitespace-nowrap sm:text-sm"
                             >
                                 +{data.skills.length - scount} more
                             </div>
                         )}
                     </div>
+                    <p className="leading-4 line-clamp-2 text-sm text-muted-foreground font-semibold">{getPlainText(data.description)}</p>
                 </div>
             </div>
 
             {/* Right */}
             <div className="flex items-center justify-between gap-4 border-t pt-4 sm:border-l sm:border-t-0 sm:pl-6 sm:pt-0 lg:min-w-65 p-3 sm:p-6">
                 {/* Dates */}
-                <div className="flex flex-col sm:gap-2 text-sm">
-                    <div className="flex gap-2 sm:flex-col">
-                        <span className="text-muted-foreground"> Posted On </span>
-                        <span className="font-semibold"> {format(new Date(data.createdAt), "dd MMM yy hh:mm a")} </span>
+                <div className="flex flex-col gap-2 text-sm">
+                    <div className="flex items-center gap-3">
+                        <div
+                            style={boxClr}
+                            className="flex h-10 w-10 items-center justify-center rounded-lg border"
+                        >
+                            <CalendarDays className="h-5 w-5" />
+                        </div>
+
+                        <div>
+                            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                                {dateInfo.label1}
+                            </p>
+
+                            <p className="font-semibold">
+                                {dateInfo.value1
+                                    ? format(new Date(dateInfo.value1), "dd MMM yyyy • hh:mm a")
+                                    : "-"}
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex gap-2 sm:flex-col">
-                        <span className="text-muted-foreground">Updated On</span>
-                        <span className="font-semibold">{format(new Date(data.updatedAt), "dd MMM yy hh:mm a")}</span>
+
+                    <div className="flex items-center gap-3">
+                        <div
+                            style={boxClr}
+                            className="flex h-10 w-10 items-center justify-center rounded-lg border"
+                        >
+                            <CalendarDays className="h-5 w-5" />
+                        </div>
+
+                        <div>
+                            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                                {dateInfo.label2}
+                            </p>
+
+                            <p className="font-semibold">
+                                {dateInfo.value2
+                                    ? format(new Date(dateInfo.value2), "dd MMM yyyy • hh:mm a")
+                                    : "-"}
+                            </p>
+                        </div>
                     </div>
                 </div>
-
                 {/* Action */}
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -124,6 +200,14 @@ export default function JobPostCard({ data }: Prop) {
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+            <Icon
+                style={{
+                    color: clr,
+                    opacity: 0.05,
+                    filter: "blur(1px)",
+                }}
+                className="absolute -bottom-10 -right-10 h-52 w-52 pointer-events-none"
+            />
 
             <div
                 style={{

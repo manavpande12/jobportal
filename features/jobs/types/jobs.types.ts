@@ -5,9 +5,9 @@ export type JobsResponse = {
     title: string;
     description: string;
     companyName: string;
-    skills: Skills;
+    skills: Skills[];
     slug: string;
-    postedOn: string;
+    publishedOn: string;
 }
 
 export type JobSearchRequest = {

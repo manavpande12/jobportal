@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { isValidRole, ROLE_DASHBOARD, RoleType } from "./common/types/role.types";
-import { ROUTES } from "./config/routes";
+import { ROUTES } from "./common/config/routes";
 import { decodeToken } from "./common/lib/jwt";
 
 

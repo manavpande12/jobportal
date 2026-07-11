@@ -134,7 +134,7 @@ export default function JobPostDialog({ id, action, trigger }: Props) {
                         variant={config.buttonVariant}
                         onClick={onSubmit}
                         disabled={loading}
-                        className="w-32"
+                        className="min-w-32"
                     >
                         {loading ? (
                             <ButtonSpinner />

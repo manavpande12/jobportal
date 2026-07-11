@@ -19,7 +19,7 @@ public class JobsMapper {
                                 .companyName(jobPost.getCompany().getName())
                                 .slug(jobPost.getCompany().getSlug())
                                 .skills(skillMapper.toResponseList(jobPost.getSkills()))
-                                .postedOn(jobPost.getPostedOn())
+                                .publishedOn(jobPost.getPublishedOn())
                                 .build();
         }
 }

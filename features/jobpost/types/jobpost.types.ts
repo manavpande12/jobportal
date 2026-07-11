@@ -31,7 +31,8 @@ export type JobPostResponse = {
     companyName: string;
     slug: string;
     skills: Skills[];
-    postedOn: string;
+    publishedOn: string;
+    draftedOn: string;
     closedOn: string;
     createdAt: string;
     updatedAt: string;

@@ -1,19 +1,20 @@
 "use client";
 
-import { useGetSearchJobs } from "../hooks/useJobs";
+import { Skeleton } from "@/common/components/ui/skeleton";
+import { JobsResponse } from "../types/jobs.types";
+import JobCard from "./JobCard";
 
-export default function JobList() {
-    const { data, isLoading } = useGetSearchJobs({
-        page: 0,
-        size: 10,
-        skillIds: [1, 2],
-        title: "Software Engineer"
-    });
+interface JobListProps { jobs: JobsResponse[]; isLoading: boolean; }
+export default function JobList({ jobs, isLoading, }: JobListProps) {
+    if (isLoading) {
+        return <Skeleton />;
+    }
 
     return (
-        <section className="p-2 sm:p-6">
-
-
+        <section className="p-4 space-y-4">
+            {jobs.map((job) => (
+                <JobCard key={job.id} data={job} />
+            ))}
         </section>
     );
 }

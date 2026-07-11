@@ -10,11 +10,11 @@ import java.util.UUID;
 
 @Builder
 public record JobResponse(
-        UUID id,
-        String title,
-        String description,
-        String companyName,
-        String slug,
-        List<SkillResponse> skills,
-        LocalDateTime postedOn) {
+                UUID id,
+                String title,
+                String description,
+                String companyName,
+                String slug,
+                List<SkillResponse> skills,
+                LocalDateTime publishedOn) {
 }

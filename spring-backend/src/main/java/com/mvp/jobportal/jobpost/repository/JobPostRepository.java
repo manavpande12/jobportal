@@ -2,8 +2,10 @@ package com.mvp.jobportal.jobpost.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import com.mvp.jobportal.jobpost.entity.JobPost;
@@ -13,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface JobPostRepository extends JpaRepository<JobPost, UUID> {
+public interface JobPostRepository extends JpaRepository<JobPost, UUID>, JpaSpecificationExecutor<JobPost> {
 
       @Query("""
                   SELECT DISTINCT jp
@@ -58,29 +60,6 @@ public interface JobPostRepository extends JpaRepository<JobPost, UUID> {
       @EntityGraph(attributePaths = { "createdBy", "company", "skills" })
       Page<JobPost> findByCreatedBy_IdAndStatus(UUID createdById, JobPostStatus status, Pageable pageable);
 
-      @Query("""
-                      SELECT DISTINCT jp
-                      FROM JobPost jp
-                      LEFT JOIN jp.skills s
-                      WHERE jp.status = com.mvp.jobportal.jobpost.enums.JobPostStatus.ACTIVE
-                        AND jp.createdBy.deleted = false
-                        AND (
-                              :title IS NULL
-                              OR LOWER(jp.title) LIKE LOWER(CONCAT('%', :title, '%'))
-                              OR LOWER(s.name) LIKE LOWER(CONCAT('%', :title, '%'))
-                        )
-                        AND (
-                              :skillIds IS NULL
-                              OR s.id IN :skillIds
-                        )
-                  """)
-      @EntityGraph(attributePaths = {
-                  "company",
-                  "skills",
-                  "createdBy"
-      })
-      Page<JobPost> searchJobs(
-                  String title,
-                  List<Long> skillIds,
-                  Pageable pageable);
+      @EntityGraph(attributePaths = { "company", "skills", "createdBy" })
+      Page<JobPost> findAll(Specification<JobPost> spec, Pageable pageable);
 }

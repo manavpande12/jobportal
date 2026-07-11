@@ -51,6 +51,8 @@ public class JobPostServiceImpl implements JobPostService {
         Set<Skill> skills = skillService.getValidatedSkills(request.skillIds());
         JobPost jobPost = jobPostMapper.toEntity(request, recruiterProfile.getUser(), recruiterProfile.getCompany(),
                 skills);
+        jobPost.setStatus(JobPostStatus.DRAFT);
+        jobPost.setDraftedOn(LocalDateTime.now());
         jobPostRepository.save(jobPost);
     }
 
@@ -91,7 +93,7 @@ public class JobPostServiceImpl implements JobPostService {
         JobPost jobPost = jobPostRepository.findOwnedDetailedByJobPostIdAndUserId(jobPostId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Job post not found."));
         jobPost.setStatus(JobPostStatus.ACTIVE);
-        jobPost.setPostedOn(LocalDateTime.now());
+        jobPost.setPublishedOn(LocalDateTime.now());
         jobPostRepository.save(jobPost);
     }
 
@@ -101,6 +103,7 @@ public class JobPostServiceImpl implements JobPostService {
         JobPost jobPost = jobPostRepository.findOwnedDetailedByJobPostIdAndUserId(jobPostId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Job post not found."));
         jobPost.setStatus(JobPostStatus.DRAFT);
+        jobPost.setDraftedOn(LocalDateTime.now());
         jobPostRepository.save(jobPost);
     }
 
