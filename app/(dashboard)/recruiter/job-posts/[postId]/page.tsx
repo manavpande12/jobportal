@@ -1,4 +1,4 @@
-import JobPage from "@/features/jobpost/components/JobPage";
+import JobPostPage from "@/features/jobpost/components/JobPostPage";
 
 type Props = {
     params: Promise<{
@@ -9,7 +9,7 @@ export default async function JobViewPage({ params }: Props) {
     const { postId } = await params;
     return (
         <div className="flex-1 rounded-xl border bg-background px-3 py-6 xl:px-6">
-            <JobPage id={postId} />
+            <JobPostPage id={postId} />
         </div>
     );
 }

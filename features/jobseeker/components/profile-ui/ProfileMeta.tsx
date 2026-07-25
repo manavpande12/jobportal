@@ -1,4 +1,4 @@
-import ProfileInfo from "@/common/components/profile-info";
+import InfoItem from "@/common/components/info-item";
 import { format } from "date-fns";
 import { Calendar, Clock } from "lucide-react";
 import { JobSeekerProfileResponse } from "../../types/jobseeker.types";
@@ -6,7 +6,7 @@ import { JobSeekerProfileResponse } from "../../types/jobseeker.types";
 const ProfileMeta = ({ data }: { data: JobSeekerProfileResponse }) => {
     return (
         <div className="bg-background flex-1 rounded-xl p-6 sm:p-10 flex sm:justify-evenly gap-4 flex-wrap transition-all duration-300 hover:shadow-lg">
-            <ProfileInfo
+            <InfoItem
                 Icon={Calendar}
                 title="Created At"
                 value={
@@ -14,7 +14,7 @@ const ProfileMeta = ({ data }: { data: JobSeekerProfileResponse }) => {
                     format(new Date(data.createdAt), "dd MMM yyyy hh:mm a")
                 }
             />
-            <ProfileInfo
+            <InfoItem
                 Icon={Clock}
                 title="Last Updated"
                 value={

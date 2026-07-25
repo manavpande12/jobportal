@@ -89,11 +89,6 @@ export async function proxy(request: NextRequest) {
             return NextResponse.next();
         }
 
-        // ROOT -> DASHBIOARD
-        if (pathname === "/") {
-            url.pathname = expectedRoute;
-            return NextResponse.redirect(url);
-        }
 
         // ROLE PROTECTION
         if (!expectedRoute) {

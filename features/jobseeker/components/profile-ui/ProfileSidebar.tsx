@@ -1,7 +1,7 @@
 import { Briefcase, File, Mail, Pen, User2Icon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/common/components/ui/button";
-import ProfileInfo from "@/common/components/profile-info";
+import InfoItem from "@/common/components/info-item";
 import { JobSeekerProfileResponse } from "../../types/jobseeker.types";
 
 
@@ -30,19 +30,19 @@ const ProfileSidebar = ({ data, onEdit }: { data: JobSeekerProfileResponse; onEd
             </div>
             <div className="flex flex-col gap-6 px-6">
 
-                <ProfileInfo
+                <InfoItem
                     Icon={Mail}
                     title="Email"
                     value={data.email}
                 />
 
-                <ProfileInfo
+                <InfoItem
                     Icon={Briefcase}
                     title="Experience"
                     value={`${data.yearsOfExperience ?? 0} Years`}
                 />
 
-                <ProfileInfo
+                <InfoItem
                     Icon={File}
                     title="Resume"
                     value={

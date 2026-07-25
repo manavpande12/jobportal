@@ -17,7 +17,7 @@ export default function JobCard({ data }: Prop) {
     const boxClr = { backgroundColor: hsl(clr, 0.05), borderColor: hsl(clr, 0.10), color: hsl(clr), }
     const Icon = getIconFromText(data.title, jobIcons);
     return (
-        <div className="relative flex flex-col gap-4 rounded-xl border bg-background shadow-sm transition-all hover:shadow-md sm:flex-row overflow-hidden">
+        <div onClick={() => router.push(`jobs/${data.slug}/${data.id}`)} className="relative flex flex-col gap-4 rounded-xl border bg-background shadow-sm sm:flex-row overflow-hidden cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             {/* Left */}
             <div className="flex items-start gap-4 flex-1 p-3 sm:p-6">
                 <div

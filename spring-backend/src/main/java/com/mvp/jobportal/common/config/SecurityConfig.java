@@ -42,7 +42,8 @@ public class SecurityConfig {
                                                 .authenticationEntryPoint(customAuthenticationEntryPoint))
                                 .authorizeHttpRequests(auth -> auth
                                                 .requestMatchers(
-                                                                "/api/auth/**", "/api/otp/**",
+                                                                "/api/auth/**", "/api/otp/**", "/api/jobs/**",
+                                                                "/api/skills/**",
                                                                 "/error",
                                                                 "/swagger-ui/**",
                                                                 "/v3/api-docs/**",

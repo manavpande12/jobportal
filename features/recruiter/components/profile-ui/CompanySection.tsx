@@ -3,7 +3,7 @@ import { Skeleton } from "@/common/components/ui/skeleton";
 import { Building, Calendar, CalendarCheck, Clock, Factory, Globe, Landmark, Pen, Users } from "lucide-react";
 import CreateEditCompany from "../profile-edit/CreateEditCompany";
 import Link from "next/link";
-import ProfileInfo from "@/common/components/profile-info";
+import InfoItem from "@/common/components/info-item";
 import { format } from "date-fns";
 import { Button } from "@/common/components/ui/button";
 import { useState } from "react";
@@ -114,11 +114,11 @@ export default function CompanySection() {
                 </div>
                 {/* Extra Info Company */}
                 <div className="w-full grid  grid-cols-1 md:grid-cols-2 space-y-4 border rounded-xl p-4 gap-4">
-                    <ProfileInfo Icon={Factory} title="Industry" value={data.industry} rounded="square" />
-                    <ProfileInfo Icon={Users} title="Company Size" value={data.companySize} rounded="square" />
-                    <ProfileInfo Icon={CalendarCheck} title="Founded Year" value={data.foundedYear} rounded="square" />
-                    <ProfileInfo Icon={Calendar} title="Created At" value={format(new Date(data.createdAt), "dd MMM yy hh:mm a")} rounded="square" />
-                    <ProfileInfo Icon={Clock} title="Last Updated" value={format(new Date(data.updatedAt), "dd MMM yy hh:mm a")} rounded="square" />
+                    <InfoItem Icon={Factory} title="Industry" value={data.industry} rounded="square" />
+                    <InfoItem Icon={Users} title="Company Size" value={data.companySize} rounded="square" />
+                    <InfoItem Icon={CalendarCheck} title="Founded Year" value={data.foundedYear} rounded="square" />
+                    <InfoItem Icon={Calendar} title="Created At" value={format(new Date(data.createdAt), "dd MMM yy hh:mm a")} rounded="square" />
+                    <InfoItem Icon={Clock} title="Last Updated" value={format(new Date(data.updatedAt), "dd MMM yy hh:mm a")} rounded="square" />
                 </div>
             </div>
         </div>

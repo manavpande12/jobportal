@@ -5,15 +5,9 @@ import { Moon, Menu, X, Sun } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { useGetUser } from "../hooks/useUser";
 
-const route = [
-    { label: "Overview", url: "/" },
-    { label: "Jobs", url: "/jobs" },
-    { label: "Pricing", url: "/pricing" },
-    { label: "Contact", url: "/contact" },
-    { label: "Sign In / Hire", url: "/login" },
-];
-const actionRoute = { label: "Sign In / Hire", url: "/login" };
+
 
 
 
@@ -26,10 +20,28 @@ const NavBar = ({ isTabs = true }) => {
     const inActiveBox = "bg-card/80 py-2 px-3 text-foreground rounded-4xl";
     const inActiveBoxHover = "hover:bg-card/80 hover:py-2 hover:px-3 hover:text-foreground! hover:rounded-4xl duration-300";
     const actionBtn = "bg-foreground py-2 px-3 text-background! rounded-4xl";
+    const { data: user } = useGetUser();
+    const actionRoute = user
+        ? {
+            label: "Dashboard",
+            url:
+                user.role === "RECRUITER" ? "/recruiter"
+                    : user.role === "ADMIN" ? "/admin"
+                        : "/job-seeker",
+        }
+        : {
+            label: "Sign In / Hire",
+            url: "/login",
+        };
+    const routes = [
+        { label: "Overview", url: "/" },
+        { label: "Jobs", url: "/jobs" },
+        { label: "Pricing", url: "/pricing" },
+        { label: "Contact", url: "/contact" },
+        actionRoute,
+    ];
     const [mounted, setMounted] = useState(false);
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+    useEffect(() => { setMounted(true); }, []);
 
     const isDark = mounted && resolvedTheme === "dark";
     const modeIcon = mounted
@@ -37,12 +49,8 @@ const NavBar = ({ isTabs = true }) => {
             ? <Sun className="size-5 md:size-6 text-primary" />
             : <Moon className="size-5 md:size-6 text-secondary" />
         : null;
-    const modeText = mounted
-        ? isDark ? "Light Mode" : "Dark Mode"
-        : null;
-    const modeChange = () => {
-        setTheme(isDark ? "light" : "dark");
-    };
+    const modeText = mounted ? isDark ? "Light Mode" : "Dark Mode" : null;
+    const modeChange = () => { setTheme(isDark ? "light" : "dark"); };
 
     return (
         <nav className="fixed top-0 z-50 py-2 w-full flex gap-2 items-center justify-between px-4 md:px-12 animate-in slide-in-from-top duration-1000 border-b bg-background/80 backdrop-blur-4xl">
@@ -51,7 +59,7 @@ const NavBar = ({ isTabs = true }) => {
 
             {/* Desktop Menu */}
             {isTabs && <div className="hidden  md:flex w-full max-w-120 h-14 rounded-4xl border items-center justify-between bg-background/80 px-2 ">
-                {route.map((item, idx) => (
+                {routes.map((item, idx) => (
                     <Link
                         key={item.label + idx}
                         href={item.url}
@@ -99,7 +107,7 @@ const NavBar = ({ isTabs = true }) => {
             {
                 open && isTabs && (
                     <div className="absolute top-20 left-4 right-4 bg-background border rounded-3xl p-4 flex flex-col gap-3 md:hidden shadow-lg">
-                        {route.slice(0, route.length - 1).map((item, idx) => (
+                        {routes.slice(0, routes.length - 1).map((item, idx) => (
                             <Link
                                 key={item.label + idx}
                                 href={item.url}

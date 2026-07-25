@@ -36,3 +36,28 @@ export function getColorFromText(text: string) {
 export function hsl(color: { h: number; s: number; l: number }, alpha = 1) {
     return `hsl(${color.h} ${color.s}% ${color.l}% / ${alpha})`;
 }
+
+
+
+/**
+ * Generates a deterministic color from a status string.
+ */
+
+type Status = | "ACTIVE" | "DRAFT" | "PAUSED" | "CLOSED" | "EXPIRED" | "PENDING";
+const statusColors: Record<Status, { h: number; s: number; l: number }> = {
+    ACTIVE: { h: 221, s: 70, l: 54 }, // Modern Blue (#3B82F6)
+    DRAFT: { h: 43, s: 90, l: 52 }, // Amber (#F59E0B)
+    PAUSED: { h: 191, s: 65, l: 46 }, // Cyan (#06B6D4)
+    CLOSED: { h: 0, s: 72, l: 51 }, // Red (#DC2626)
+    EXPIRED: { h: 273, s: 65, l: 58 }, // Violet (#8B5CF6)
+    PENDING: { h: 165, s: 70, l: 40 }, // Emerald/Teal (#10B981)
+};
+const defaultStatusColor = { h: 220, s: 10, l: 45 }; // Neutral Slate
+
+export function getColorFromStatus(status?: string) {
+    if (!status) return defaultStatusColor;
+    return (
+        statusColors[status.toUpperCase() as keyof typeof statusColors] ??
+        defaultStatusColor
+    );
+}

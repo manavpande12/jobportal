@@ -1,7 +1,7 @@
 import { Calendar, Clock, Mail, Pen, User2Icon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/common/components/ui/button";
-import ProfileInfo from "@/common/components/profile-info";
+import InfoItem from "@/common/components/info-item";
 import { format } from "date-fns";
 import { RecruiterProfileResponse } from "../../types/recruiter.types";
 
@@ -31,12 +31,12 @@ const ProfileSidebar = ({ data, onEdit }: { data: RecruiterProfileResponse; onEd
             </div>
             <div className="flex flex-col gap-6 px-3 xl:px-6">
 
-                <ProfileInfo
+                <InfoItem
                     Icon={Mail}
                     title="Email"
                     value={data.email}
                 />
-                <ProfileInfo
+                <InfoItem
                     Icon={Calendar}
                     title="Created At"
                     value={
@@ -44,7 +44,7 @@ const ProfileSidebar = ({ data, onEdit }: { data: RecruiterProfileResponse; onEd
                         format(new Date(data.createdAt), "dd MMM yyyy hh:mm a")
                     }
                 />
-                <ProfileInfo
+                <InfoItem
                     Icon={Clock}
                     title="Last Updated"
                     value={

@@ -20,3 +20,4 @@ export const useLogout = () =>
     useMutation({
         mutationFn: logout,
     });
+

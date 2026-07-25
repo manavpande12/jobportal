@@ -20,6 +20,9 @@ import {
     type LucideIcon,
 } from "lucide-react";
 
+
+import { FaLinkedinIn, FaWhatsapp, FaXTwitter, FaTelegram, FaCopy, FaFacebook } from "react-icons/fa6";
+
 export const jobIcons: LucideIcon[] = [
     BriefcaseBusiness,
     Code2,
@@ -40,6 +43,16 @@ export const jobIcons: LucideIcon[] = [
     PencilRuler,
     Settings2,
 ];
+
+
+export const socialIcons = [
+    { icon: FaFacebook, label: "Facebook" },
+    { icon: FaLinkedinIn, label: "LinkedIn" },
+    { icon: FaWhatsapp, label: "WhatsApp" },
+    { icon: FaXTwitter, label: "X" },
+    { icon: FaTelegram, label: "Telegram" },
+    { icon: FaCopy, label: "Copy Link" },
+]
 
 function hash(text: string) {
     let hash = 2166136261;

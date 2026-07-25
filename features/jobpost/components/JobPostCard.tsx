@@ -11,6 +11,7 @@ import { JobPostResponse } from "../types/jobpost.types";
 import { useIsMobile } from "@/common/hooks/useMobile";
 import { getPlainText } from "@/common/utils/html";
 import { getIconFromText, jobIcons } from "@/common/constants/icon";
+import { getColorFromStatus, hsl } from "@/common/constants/color";
 type Prop = {
     data: JobPostResponse;
 }
@@ -18,22 +19,9 @@ export default function JobPostCard({ data }: Prop) {
     const isMobile = useIsMobile();
     const router = useRouter();
     const scount = isMobile ? 2 : 6;
-    let clr = "#565667";
+    const clr = getColorFromStatus(data.status);
+    const boxClr = { backgroundColor: hsl(clr, 0.05), borderColor: hsl(clr, 0.10), color: hsl(clr), }
 
-    switch (data.status) {
-        case "ACTIVE":
-            clr = "#305CDE";
-            break;
-        case "DRAFT":
-            clr = "#EAB308";
-            break;
-        case "CLOSED":
-            clr = "#DC2626";
-            break;
-        default:
-            clr = "#565667";
-            break;
-    }
 
     const dateInfo = (() => {
         switch (data.status) {
@@ -70,7 +58,7 @@ export default function JobPostCard({ data }: Prop) {
                 };
         }
     })();
-    const boxClr = { backgroundColor: clr + "10", borderColor: clr + "10", color: clr, }
+
     const Icon = getIconFromText(data.title, jobIcons);
     return (
         <div className="relative flex flex-col gap-4 rounded-xl border bg-background shadow-sm transition-all hover:shadow-md sm:flex-row overflow-hidden">
@@ -82,11 +70,11 @@ export default function JobPostCard({ data }: Prop) {
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <div className="flex items-center gap-2">
                         <span
-                            style={{ backgroundColor: clr }}
+                            style={{ backgroundColor: hsl(clr) }}
                             className="size-2 rounded-full shrink-0"
                         />
                         <span
-                            style={{ color: clr }}
+                            style={{ color: hsl(clr) }}
                             className="text-xs font-semibold uppercase tracking-[0.18em]"
                         >
                             {data.status}
@@ -202,8 +190,7 @@ export default function JobPostCard({ data }: Prop) {
             </div>
             <Icon
                 style={{
-                    color: clr,
-                    opacity: 0.05,
+                    color: hsl(clr, 0.05),
                     filter: "blur(1px)",
                 }}
                 className="absolute -bottom-10 -right-10 h-52 w-52 pointer-events-none"

@@ -8,16 +8,19 @@ import { useRouter } from "next/navigation"
 import { MoreVertical, Pencil, Trash2 } from "lucide-react";;
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/common/components/ui/dropdown-menu";
 import { format } from "date-fns";
-import JobPostStatusBadge from "@/common/components/job-post-status-badge";
 import { useGetJobPostById } from "../hooks/useJobPost";
+import { getColorFromStatus, hsl } from "@/common/constants/color";
 
 
 type Prop = {
     id: string;
 }
-export default function JobPage({ id }: Prop) {
+export default function JobPostPage({ id }: Prop) {
     const { data, isLoading } = useGetJobPostById(id);
     const router = useRouter();
+    const clr = getColorFromStatus(data?.status);
+    const boxClr = { backgroundColor: hsl(clr, 0.05), borderColor: hsl(clr, 0.10), color: hsl(clr), }
+
     if (isLoading || !data) {
         return (
             <div className="space-y-6">
@@ -64,7 +67,10 @@ export default function JobPage({ id }: Prop) {
             <div className="py-6 flex flex-col">
                 <h1 className="font-bold text-3xl xl:text-4xl">{data.title}</h1>
                 <div className="flex gap-4 py-2 mb-2 overflow-x-auto whitespace-nowrap scrollbar-none text-muted-foreground font-medium">
-                    <JobPostStatusBadge status={data.status} />
+                    <div style={boxClr} className="inline-flex items-center gap-2 rounded-sm px-3 py-0.5 text-sm font-medium">
+                        <div style={{ backgroundColor: hsl(clr) }} className="size-2 rounded-full" />
+                        <span>{data.status}</span>
+                    </div>
                     <div className="flex shrink-0 gap-2 items-center text-sm">
                         <Building className="size-4 shrink-0" />
                         <span className="text-foreground">{data.companyName}</span>
@@ -85,7 +91,7 @@ export default function JobPage({ id }: Prop) {
 
             </div>
             <div className="rounded-lg border p-4">
-                <RichTextViewer html={data.description} />
+                <RichTextViewer html={data.description} color={hsl(clr)} />
             </div>
         </div>
     );
