@@ -1,33 +1,23 @@
 # ENV
-.env
-.env.local
-.env.production
+apps/frontend/.env
+apps/frontend/.env.local
+apps/frontend/.env.production
 
 # NEXT.JS
-.next/
-out/
+apps/frontend/.next/
+apps/frontend/out/
 
 # NODE
-node_modules/
-npm-debug.log*
+apps/frontend/node_modules/
+apps/frontend/npm-debug.log*
 
 # SPRING BOOT
-backend/target/
-backend/logs/
+apps/backend/target/
+apps/backend/logs/
 
 # IDE
-.idea/
 .vscode/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# IntelliJ
-*.iml
+apps/backend/.idea/
 
 # VS Code local workspace
 *.code-workspace
