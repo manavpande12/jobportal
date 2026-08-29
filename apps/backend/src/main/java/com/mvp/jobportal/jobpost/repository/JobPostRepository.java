@@ -62,4 +62,6 @@ public interface JobPostRepository extends JpaRepository<JobPost, UUID>, JpaSpec
 
       @EntityGraph(attributePaths = { "company", "skills", "createdBy" })
       Page<JobPost> findAll(Specification<JobPost> spec, Pageable pageable);
+
+      Optional<JobPost> findByIdAndDeletedFalseAndCreatedBy_DeletedFalse(UUID id);
 }

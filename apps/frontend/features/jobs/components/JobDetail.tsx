@@ -11,6 +11,8 @@ import clsx from "clsx";
 import { Button } from "@/common/components/ui/button";
 import InfoItem from "@/common/components/info-item";
 import { format } from "date-fns";
+import JobApplicationAction from "./JobApplicationAction";
+import { JobPostStatus } from "@/features/jobpost/types/jobpost.types";
 
 
 
@@ -95,10 +97,11 @@ export default function JobDetail({ id }: { id: string }) {
 
                         {/* Right */}
                         <div className="flex w-full flex-col gap-4 lg:w-auto lg:items-center">
-                            <Button style={neBoxClr} className="w-full lg:min-w-65 lg:w-auto py-6! text-xl">
-                                <span>Apply Now</span>
-                                <Send className="size-6" />
-                            </Button>
+                            <JobApplicationAction
+                                jobPostId={data.id}
+                                isActive={data.status === JobPostStatus.ACTIVE}
+                                style={neBoxClr}
+                            />
                             <div className="flex flex-wrap justify-center gap-2">
                                 {socialIcons.map(({ icon: Icon, label }) => (
                                     <button

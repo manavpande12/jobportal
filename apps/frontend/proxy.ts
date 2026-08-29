@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { isValidRole, ROLE_DASHBOARD, RoleType } from "./common/types/role.types";
-import { ROUTES } from "./common/config/routes";
+import { isRouteMatch, ROUTES } from "./common/config/routes";
 import { decodeToken } from "./common/lib/jwt";
-
 
 export async function proxy(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -11,13 +10,9 @@ export async function proxy(request: NextRequest) {
     const accessToken = request.cookies.get("accessToken")?.value;
     const refreshToken = request.cookies.get("refreshToken")?.value;
     const url = request.nextUrl.clone();
-    const isPublicRoute = ROUTES.public.some(route =>
-        pathname === route || pathname.startsWith(route + "/")
-    );
-    const isGuestRoute = ROUTES.guest.includes(pathname);
-    const isProtectedRoute = ROUTES.protected.some(route =>
-        pathname.startsWith(route)
-    );
+    const isPublicRoute = isRouteMatch(pathname, ROUTES.public);
+    const isGuestRoute = isRouteMatch(pathname, ROUTES.guest);
+    const isProtectedRoute = isRouteMatch(pathname, ROUTES.protected);
     let refreshed = false;
 
     // Try refresh if access token missing
@@ -28,16 +23,11 @@ export async function proxy(request: NextRequest) {
                 {
                     method: "POST",
                     credentials: "include",
-                    headers: {
-                        cookie:
-                            request.headers.get("cookie") || "",
-                    },
+                    headers: { cookie: request.headers.get("cookie") || "", },
                 }
             );
             if (refreshResponse.ok) {
                 refreshed = true;
-
-                console.log("REFRESH SUCCESS");
                 const res = NextResponse.next();
                 const setCookie = refreshResponse.headers.get("set-cookie");
                 if (setCookie) {
@@ -48,9 +38,7 @@ export async function proxy(request: NextRequest) {
         }
     }
     catch {
-        return NextResponse.redirect(
-            new URL("/login", request.url)
-        );
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     // No auth after refresh attempt
@@ -58,17 +46,13 @@ export async function proxy(request: NextRequest) {
         if (isPublicRoute || isGuestRoute) {
             return NextResponse.next();
         }
-        return NextResponse.redirect(
-            new URL("/login", request.url)
-        );
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     // Skip decode immediately after refresh
     if (refreshed) {
         return NextResponse.next();
     }
-
-
 
     try {
         // INVALID ROLE OR JWT DECODE NULL -> REJECT

@@ -18,7 +18,7 @@ const inter = Inter({
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning >
-      <body className="min-h-screen flex flex-col scrollbar-prop">
+      <body className="min-h-dvh flex flex-col scrollbar-prop">
         <TanstackProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             {children}

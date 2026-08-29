@@ -1,5 +1,6 @@
 package com.mvp.jobportal.common.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mvp.jobportal.common.dto.ApiResponse;
 import com.mvp.jobportal.common.enums.ErrorCode;
 
@@ -10,7 +11,6 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import tools.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 @Component

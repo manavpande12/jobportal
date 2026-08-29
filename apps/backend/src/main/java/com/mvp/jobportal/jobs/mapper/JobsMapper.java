@@ -16,6 +16,7 @@ public class JobsMapper {
                                 .id(jobPost.getId())
                                 .title(jobPost.getTitle())
                                 .description(jobPost.getDescription())
+                                .status(jobPost.getStatus())
                                 .companyName(jobPost.getCompany().getName())
                                 .slug(jobPost.getCompany().getSlug())
                                 .skills(skillMapper.toResponseList(jobPost.getSkills()))

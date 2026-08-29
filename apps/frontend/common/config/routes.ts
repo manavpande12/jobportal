@@ -48,3 +48,10 @@ export const GET_ROUTE_TITLE = (role: RoleType, pathname: string): string | unde
 export const GET_ROUTE_TABS = (role: RoleType): TabsTypes[] => {
     return PROTECTED_ROUTES[role];
 };
+
+
+export const isRouteMatch = (pathname: string, routes: string[]): boolean => {
+    return routes.some(
+        route => pathname === route || pathname.startsWith(route + "/")
+    );
+};
