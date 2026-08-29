@@ -12,8 +12,8 @@ node_modules/
 npm-debug.log*
 
 # SPRING BOOT
-spring-backend/target/
-spring-backend/logs/
+backend/target/
+backend/logs/
 
 # IDE
 .idea/

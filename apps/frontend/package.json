@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e .env -- concurrently -n NEXT,SPRING -c blue,green \"npm run dev:next\" \"npm run dev:spring\"",
-    "dev:next": "next dev",
-    "dev:spring": "dotenv -e .env -- cmd /c \"cd spring-backend && mvnw.cmd spring-boot:run\"",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

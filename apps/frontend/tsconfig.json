@@ -37,7 +37,6 @@
     "**/*.mts"
   ],
   "exclude": [
-    "node_modules",
-    "spring-backend"
+    "node_modules"
   ]
 }
