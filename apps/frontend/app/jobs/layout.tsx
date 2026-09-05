@@ -5,7 +5,7 @@ export default function JobsLayout({ children, }: Readonly<{ children: React.Rea
     return (
         <>
             <NavBar />
-            <main className="mt-21 sm:mt-0">{children}</main>
+            <main>{children}</main>
             <Footer />
         </>
     );

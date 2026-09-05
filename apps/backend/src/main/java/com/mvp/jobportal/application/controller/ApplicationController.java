@@ -1,5 +1,6 @@
 package com.mvp.jobportal.application.controller;
 
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Pageable;
@@ -7,8 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.mvp.jobportal.application.dto.ApplicationFilterRequest;
 import com.mvp.jobportal.application.dto.ApplicationResponse;
 import com.mvp.jobportal.application.dto.UpdateApplicationStatusRequest;
+import com.mvp.jobportal.application.enums.ApplicationStatus;
 import com.mvp.jobportal.application.service.ApplicationService;
 import com.mvp.jobportal.common.dto.ApiResponse;
 import com.mvp.jobportal.common.dto.PageResponse;
@@ -36,9 +39,10 @@ public class ApplicationController {
 
         @PreAuthorize("hasRole('JOB_SEEKER')")
         @GetMapping("/me")
-        public ResponseEntity<ApiResponse<PageResponse<ApplicationResponse>>> getMine(Pageable pageable) {
+        public ResponseEntity<ApiResponse<PageResponse<ApplicationResponse>>> getMine(
+                        @ModelAttribute ApplicationFilterRequest request, Pageable pageable) {
                 UUID userId = SecurityUtils.getAuthenticatedUserId();
-                PageResponse<ApplicationResponse> applications = applicationService.getMine(userId, pageable);
+                PageResponse<ApplicationResponse> applications = applicationService.getMine(userId, request, pageable);
                 return ResponseEntity.ok(ApiResponse.success("Applications fetched successfully.", applications));
         }
 
@@ -64,5 +68,14 @@ public class ApplicationController {
                 UUID userId = SecurityUtils.getAuthenticatedUserId();
                 boolean hasApplied = applicationService.hasApplied(jobPostId, userId);
                 return ResponseEntity.ok(ApiResponse.success("Application status fetched successfully.", hasApplied));
+        }
+
+        @PreAuthorize("hasRole('JOB_SEEKER')")
+        @GetMapping("/me/status-count")
+        public ResponseEntity<ApiResponse<Map<ApplicationStatus, Long>>> getMyApplicationStatusCount() {
+                UUID userId = SecurityUtils.getAuthenticatedUserId();
+                Map<ApplicationStatus, Long> counts = applicationService.getMyApplicationStatusCount(userId);
+                return ResponseEntity
+                                .ok(ApiResponse.success("Application status counts fetched successfully.", counts));
         }
 }

@@ -45,6 +45,7 @@ public class ApplicationMapper {
                 .title(jobPost.getTitle())
                 .status(jobPost.getStatus())
                 .companyName(jobPost.getCompany().getName())
+                .companySlug(jobPost.getCompany().getSlug())
                 .skills(skillMapper.toResponseList(jobPost.getSkills()))
                 .build();
     }

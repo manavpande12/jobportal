@@ -1,5 +1,5 @@
 import { RoleType } from "@/common/types/role.types";
-import { Bolt, BriefcaseBusiness, CirclePlus, Home, LucideIcon, Search, Settings } from "lucide-react";
+import { Bolt, BriefcaseBusiness, CirclePlus, FileCheck, Home, LucideIcon, Search, Settings } from "lucide-react";
 export enum AccessType { PUBLIC, GUEST, PRIVATE }
 export type TabsTypes = { label: string; path: string; icon: LucideIcon; hide?: boolean }
 
@@ -12,6 +12,7 @@ export const PROTECTED_ROUTES: Record<RoleType, TabsTypes[]> = {
     [RoleType.JOB_SEEKER]: [
         { label: "Dashboard", path: "/job-seeker", icon: Home },
         { label: "Find Jobs", path: "/jobs", icon: Search },
+        { label: "My Applications", path: "/job-seeker/applications", icon: FileCheck },
         { label: "Settings", path: "/job-seeker/settings", icon: Settings },
     ],
 

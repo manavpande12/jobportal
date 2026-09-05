@@ -1,5 +1,5 @@
-import { applyForJob, getApplicationsForJob, getMyApplications, hasApplied, updateApplicationStatus, } from "../services/application.service";
-import { ApplicationPageRequest, UpdateApplicationStatusRequest, } from "../types/application.types";
+import { applyForJob, getApplicationsForJob, getMyApplications, getMyApplicationStatusCount, hasApplied, updateApplicationStatus, } from "../services/application.service";
+import { ApplicationPageRequest, MyApplicationRequest, UpdateApplicationStatusRequest, } from "../types/application.types";
 import { useMutation, useQuery, useQueryClient, } from "@tanstack/react-query";
 
 export const useApplyForJob = () => {
@@ -16,7 +16,7 @@ export const useApplyForJob = () => {
 };
 
 
-export const useGetMyApplications = (params: ApplicationPageRequest) => {
+export const useGetMyApplications = (params: MyApplicationRequest) => {
     return useQuery({
         queryKey: ["my-applications", params],
         queryFn: () => getMyApplications(params),
@@ -58,6 +58,14 @@ export const useHasApplied = (jobPostId?: string) => {
         queryKey: ["has-applied", jobPostId],
         queryFn: () => hasApplied(jobPostId!),
         enabled: !!jobPostId,
+        staleTime: 1000 * 60 * 5,
+    });
+};
+
+export const useGetMyApplicationStatusCount = () => {
+    return useQuery({
+        queryKey: ["my-application-status-count"],
+        queryFn: getMyApplicationStatusCount,
         staleTime: 1000 * 60 * 5,
     });
 };

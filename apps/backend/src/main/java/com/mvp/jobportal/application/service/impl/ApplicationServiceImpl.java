@@ -1,18 +1,23 @@
 package com.mvp.jobportal.application.service.impl;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mvp.jobportal.application.dto.ApplicationFilterRequest;
 import com.mvp.jobportal.application.dto.ApplicationResponse;
 import com.mvp.jobportal.application.entity.Application;
 import com.mvp.jobportal.application.enums.ApplicationStatus;
 import com.mvp.jobportal.application.mapper.ApplicationMapper;
 import com.mvp.jobportal.application.repository.ApplicationRepository;
 import com.mvp.jobportal.application.service.ApplicationService;
+import com.mvp.jobportal.application.specification.ApplicationSpecification;
 import com.mvp.jobportal.common.dto.PageResponse;
 import com.mvp.jobportal.common.exception.ConflictException;
 import com.mvp.jobportal.common.exception.ResourceNotFoundException;
@@ -52,9 +57,20 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public PageResponse<ApplicationResponse> getMine(UUID userId, Pageable pageable) {
-        Page<ApplicationResponse> page = applicationRepository
-                .findByUserIdWithRelations(userId, pageable)
+    public PageResponse<ApplicationResponse> getMine(UUID userId, ApplicationFilterRequest request, Pageable pageable) {
+        Specification<Application> specification = Specification
+                .where(ApplicationSpecification.byUser(userId))
+                .and(ApplicationSpecification.activeRelations());
+
+        if (request.search() != null && !request.search().isBlank()) {
+            specification = specification.and(ApplicationSpecification.search(request.search()));
+        }
+
+        if (request.status() != null) {
+            specification = specification.and(ApplicationSpecification.status(request.status()));
+        }
+
+        Page<ApplicationResponse> page = applicationRepository.findAll(specification, pageable)
                 .map(applicationMapper::toResponse);
         return PageResponse.of(page);
     }
@@ -79,6 +95,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     @Override
     public boolean hasApplied(UUID jobPostId, UUID userId) {
         return applicationRepository.existsByJobPostIdAndUserId(jobPostId, userId);
+    }
+
+    @Override
+    public Map<ApplicationStatus, Long> getMyApplicationStatusCount(UUID userId) {
+        return applicationRepository.countByStatus(userId)
+                .stream()
+                .collect(Collectors.toMap(row -> (ApplicationStatus) row[0], row -> (Long) row[1]));
     }
 
 }

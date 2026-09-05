@@ -10,10 +10,11 @@ import lombok.Builder;
 
 @Builder
 public record JobPostResponse(
-                UUID id,
-                String title,
-                String companyName,
-                JobPostStatus status,
-                List<SkillResponse> skills) {
+        UUID id,
+        String title,
+        String companyName,
+        String companySlug,
+        JobPostStatus status,
+        List<SkillResponse> skills) {
 
 }
