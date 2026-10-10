@@ -12,8 +12,13 @@ public final class ApplicationSpecification {
     private ApplicationSpecification() {
     }
 
-    public static Specification<Application> byUser(UUID userId) {
+    public static Specification<Application> byJobSeeker(UUID userId) {
         return (root, query, cb) -> cb.equal(root.get("user").get("id"), userId);
+    }
+
+    public static Specification<Application> byRecruiter(UUID userId) {
+        return (root, query, cb) -> cb.equal(
+                root.get("jobPost").get("createdBy").get("id"), userId);
     }
 
     public static Specification<Application> status(ApplicationStatus status) {

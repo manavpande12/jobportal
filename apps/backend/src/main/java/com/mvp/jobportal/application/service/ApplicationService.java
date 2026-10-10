@@ -14,7 +14,9 @@ public interface ApplicationService {
 
     void apply(UUID jobPostId, UUID userId);
 
-    PageResponse<ApplicationResponse> getMine(UUID userId, ApplicationFilterRequest request, Pageable pageable);
+    PageResponse<ApplicationResponse> getForJobSeeker(UUID userId, ApplicationFilterRequest request, Pageable pageable);
+
+    PageResponse<ApplicationResponse> getForRecruiter(UUID userId, ApplicationFilterRequest request, Pageable pageable);
 
     PageResponse<ApplicationResponse> getForJob(UUID jobPostId, Pageable pageable);
 
@@ -22,6 +24,6 @@ public interface ApplicationService {
 
     boolean hasApplied(UUID jobPostId, UUID userId);
 
-    Map<ApplicationStatus, Long> getMyApplicationStatusCount(UUID userId);
+    Map<ApplicationStatus, Long> getJobSeekerApplicationStatusCount(UUID userId);
 
 }

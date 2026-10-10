@@ -5,9 +5,9 @@ import { ApplicationStats } from "./ApplicationStats";
 import { ApplicationFilter } from "./ApplicationFilter";
 import { ApplicationList } from "./ApplicationList";
 import ApplicationPagination from "./ApplicationPagination";
-import { useGetMyApplications } from "@/features/application/hooks/useApplication";
 import { ApplicationStatus } from "@/features/application/types/application.types";
 import { useDebounce } from "@/common/hooks/useDebounce";
+import { useGetJobSeekerApplications } from "@/features/application/hooks/useApplication";
 
 export type ApplicationFilterState = {
     search: string;
@@ -37,7 +37,7 @@ export default function ApplicationView() {
         setSize(value); setPage(0);
     };
 
-    const { data: applications, isLoading } = useGetMyApplications({
+    const { data: applications, isLoading } = useGetJobSeekerApplications({
         page,
         size,
         sort: SORT_OPTIONS[filter.sort as keyof typeof SORT_OPTIONS],

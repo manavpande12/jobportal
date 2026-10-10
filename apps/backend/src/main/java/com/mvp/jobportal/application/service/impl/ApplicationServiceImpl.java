@@ -33,75 +33,99 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ApplicationServiceImpl implements ApplicationService {
-    private final JobPostRepository jobPostRepository;
-    private final UserRepository userRepository;
-    private final ApplicationMapper applicationMapper;
-    private final ApplicationRepository applicationRepository;
+        private final JobPostRepository jobPostRepository;
+        private final UserRepository userRepository;
+        private final ApplicationMapper applicationMapper;
+        private final ApplicationRepository applicationRepository;
 
-    @Override
-    @Transactional
-    public void apply(UUID jobPostId, UUID userId) {
-        JobPost jobPost = jobPostRepository.findByIdAndDeletedFalseAndCreatedBy_DeletedFalse(jobPostId)
-                .orElseThrow(() -> new ResourceNotFoundException("Job post not found."));
-        User user = userRepository.findActiveUserById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-        if (hasApplied(jobPostId, userId)) {
-            throw new ConflictException("You already applied for this job.");
-        }
-        if (jobPost.getStatus() != JobPostStatus.ACTIVE) {
-            throw new ConflictException("Job post is not accepting applications.");
-        }
+        @Override
+        @Transactional
+        public void apply(UUID jobPostId, UUID userId) {
+                JobPost jobPost = jobPostRepository.findByIdAndDeletedFalseAndCreatedBy_DeletedFalse(jobPostId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Job post not found."));
+                User user = userRepository.findActiveUserById(userId)
+                                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+                if (hasApplied(jobPostId, userId)) {
+                        throw new ConflictException("You already applied for this job.");
+                }
+                if (jobPost.getStatus() != JobPostStatus.ACTIVE) {
+                        throw new ConflictException("Job post is not accepting applications.");
+                }
 
-        Application application = applicationMapper.toEntity(jobPost, user, ApplicationStatus.APPLIED);
-        applicationRepository.save(application);
-    }
-
-    @Override
-    public PageResponse<ApplicationResponse> getMine(UUID userId, ApplicationFilterRequest request, Pageable pageable) {
-        Specification<Application> specification = Specification
-                .where(ApplicationSpecification.byUser(userId))
-                .and(ApplicationSpecification.activeRelations());
-
-        if (request.search() != null && !request.search().isBlank()) {
-            specification = specification.and(ApplicationSpecification.search(request.search()));
+                Application application = applicationMapper.toEntity(jobPost, user, ApplicationStatus.APPLIED);
+                applicationRepository.save(application);
         }
 
-        if (request.status() != null) {
-            specification = specification.and(ApplicationSpecification.status(request.status()));
+        @Override
+        public PageResponse<ApplicationResponse> getForJobSeeker(UUID userId, ApplicationFilterRequest request,
+                        Pageable pageable) {
+                Specification<Application> specification = Specification
+                                .where(ApplicationSpecification.byJobSeeker(userId))
+                                .and(ApplicationSpecification.activeRelations());
+
+                if (request.search() != null && !request.search().isBlank()) {
+                        specification = specification.and(ApplicationSpecification.search(request.search()));
+                }
+
+                if (request.status() != null) {
+                        specification = specification.and(ApplicationSpecification.status(request.status()));
+                }
+
+                Page<ApplicationResponse> page = applicationRepository.findAll(specification, pageable)
+                                .map(applicationMapper::toResponse);
+                return PageResponse.of(page);
         }
 
-        Page<ApplicationResponse> page = applicationRepository.findAll(specification, pageable)
-                .map(applicationMapper::toResponse);
-        return PageResponse.of(page);
-    }
+        @Override
+        public PageResponse<ApplicationResponse> getForJob(UUID jobPostId, Pageable pageable) {
+                Page<ApplicationResponse> page = applicationRepository
+                                .findByJobPostIdWithRelations(jobPostId, pageable)
+                                .map(applicationMapper::toResponse);
+                return PageResponse.of(page);
+        }
 
-    @Override
-    public PageResponse<ApplicationResponse> getForJob(UUID jobPostId, Pageable pageable) {
-        Page<ApplicationResponse> page = applicationRepository
-                .findByJobPostIdWithRelations(jobPostId, pageable)
-                .map(applicationMapper::toResponse);
-        return PageResponse.of(page);
-    }
+        @Override
+        @Transactional
+        public void updateStatus(UUID applicationId, ApplicationStatus status) {
+                Application application = applicationRepository.findById(applicationId)
+                                .orElseThrow(() -> new ResourceNotFoundException("Application not found."));
+                application.setStatus(status);
+                applicationRepository.save(application);
+        }
 
-    @Override
-    @Transactional
-    public void updateStatus(UUID applicationId, ApplicationStatus status) {
-        Application application = applicationRepository.findById(applicationId)
-                .orElseThrow(() -> new ResourceNotFoundException("Application not found."));
-        application.setStatus(status);
-        applicationRepository.save(application);
-    }
+        @Override
+        public boolean hasApplied(UUID jobPostId, UUID userId) {
+                return applicationRepository.existsByJobPostIdAndUserId(jobPostId, userId);
+        }
 
-    @Override
-    public boolean hasApplied(UUID jobPostId, UUID userId) {
-        return applicationRepository.existsByJobPostIdAndUserId(jobPostId, userId);
-    }
+        @Override
+        public Map<ApplicationStatus, Long> getJobSeekerApplicationStatusCount(UUID userId) {
+                return applicationRepository.countByStatus(userId)
+                                .stream()
+                                .collect(Collectors.toMap(row -> (ApplicationStatus) row[0], row -> (Long) row[1]));
+        }
 
-    @Override
-    public Map<ApplicationStatus, Long> getMyApplicationStatusCount(UUID userId) {
-        return applicationRepository.countByStatus(userId)
-                .stream()
-                .collect(Collectors.toMap(row -> (ApplicationStatus) row[0], row -> (Long) row[1]));
-    }
+        @Override
+        public PageResponse<ApplicationResponse> getForRecruiter(UUID userId, ApplicationFilterRequest request,
+                        Pageable pageable) {
+                Specification<Application> specification = Specification
+                                .where(ApplicationSpecification.byRecruiter(userId))
+                                .and(ApplicationSpecification.activeRelations());
+
+                if (request.search() != null && !request.search().isBlank()) {
+                        specification = specification.and(
+                                        ApplicationSpecification.search(request.search()));
+                }
+
+                if (request.status() != null) {
+                        specification = specification.and(ApplicationSpecification.status(request.status()));
+                }
+
+                Page<ApplicationResponse> page = applicationRepository
+                                .findAll(specification, pageable)
+                                .map(applicationMapper::toResponse);
+
+                return PageResponse.of(page);
+        }
 
 }

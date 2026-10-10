@@ -38,11 +38,12 @@ public class ApplicationController {
         }
 
         @PreAuthorize("hasRole('JOB_SEEKER')")
-        @GetMapping("/me")
-        public ResponseEntity<ApiResponse<PageResponse<ApplicationResponse>>> getMine(
+        @GetMapping("/jobseeker")
+        public ResponseEntity<ApiResponse<PageResponse<ApplicationResponse>>> getForJobSeeker(
                         @ModelAttribute ApplicationFilterRequest request, Pageable pageable) {
                 UUID userId = SecurityUtils.getAuthenticatedUserId();
-                PageResponse<ApplicationResponse> applications = applicationService.getMine(userId, request, pageable);
+                PageResponse<ApplicationResponse> applications = applicationService.getForJobSeeker(userId, request,
+                                pageable);
                 return ResponseEntity.ok(ApiResponse.success("Applications fetched successfully.", applications));
         }
 
@@ -71,11 +72,23 @@ public class ApplicationController {
         }
 
         @PreAuthorize("hasRole('JOB_SEEKER')")
-        @GetMapping("/me/status-count")
-        public ResponseEntity<ApiResponse<Map<ApplicationStatus, Long>>> getMyApplicationStatusCount() {
+        @GetMapping("/jobseeker/status-count")
+        public ResponseEntity<ApiResponse<Map<ApplicationStatus, Long>>> getJobSeekerApplicationStatusCount() {
                 UUID userId = SecurityUtils.getAuthenticatedUserId();
-                Map<ApplicationStatus, Long> counts = applicationService.getMyApplicationStatusCount(userId);
+                Map<ApplicationStatus, Long> counts = applicationService.getJobSeekerApplicationStatusCount(userId);
                 return ResponseEntity
                                 .ok(ApiResponse.success("Application status counts fetched successfully.", counts));
+        }
+
+        @PreAuthorize("hasRole('RECRUITER')")
+        @GetMapping("/recruiter")
+        public ResponseEntity<ApiResponse<PageResponse<ApplicationResponse>>> getForRecruiter(
+                        @ModelAttribute ApplicationFilterRequest request,
+                        Pageable pageable) {
+
+                UUID userId = SecurityUtils.getAuthenticatedUserId();
+                PageResponse<ApplicationResponse> applications = applicationService.getForRecruiter(userId, request,
+                                pageable);
+                return ResponseEntity.ok(ApiResponse.success("Applications fetched successfully.", applications));
         }
 }

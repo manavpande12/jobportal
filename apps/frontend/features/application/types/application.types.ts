@@ -47,7 +47,8 @@ export type ApplicationPageRequest = {
 };
 
 
-export type MyApplicationRequest = ApplicationPageRequest & ApplicationFilterRequest;
+export type JobSeekerApplicationRequest = ApplicationPageRequest & ApplicationFilterRequest;
+export type RecruiterApplicationRequest = ApplicationPageRequest & ApplicationFilterRequest;
 
 export type ApplicationFilterRequest = {
     search?: string;

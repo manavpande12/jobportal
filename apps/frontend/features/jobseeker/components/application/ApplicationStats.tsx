@@ -4,10 +4,10 @@ import { Carousel, CarouselContent, CarouselItem } from "@/common/components/ui/
 import { Card, CardContent } from "@/common/components/ui/card";
 import { hsl } from "@/common/constants/color";
 import { APPLICATION_STATUS_CONFIG, ApplicationStatus } from "@/features/application/types/application.types";
-import { useGetMyApplicationStatusCount } from "@/features/application/hooks/useApplication";
+import { useGetJobSeekerApplicationStatusCount } from "@/features/application/hooks/useApplication";
 
 export function ApplicationStats() {
-    const { data: counts, isLoading } = useGetMyApplicationStatusCount();
+    const { data: counts, isLoading } = useGetJobSeekerApplicationStatusCount();
 
     const APPLICATION_STATS = [
         ApplicationStatus.APPLIED,
