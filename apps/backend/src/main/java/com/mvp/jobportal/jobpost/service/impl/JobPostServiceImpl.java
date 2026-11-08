@@ -42,6 +42,9 @@ public class JobPostServiceImpl implements JobPostService {
         RecruiterProfile recruiterProfile = recruiterProfileRepository
                 .findActiveUserById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Recruiter profile not found."));
+        if (recruiterProfile.getCompany() == null) {
+            throw new BadRequestException("First add company detail then post a job.");
+        }
 
         String plainText = Jsoup.parse(request.description()).text().trim();
         if (plainText.length() < 100 || plainText.length() > 3000) {

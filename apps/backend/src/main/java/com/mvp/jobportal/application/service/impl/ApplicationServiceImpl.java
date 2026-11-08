@@ -1,7 +1,9 @@
 package com.mvp.jobportal.application.service.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -24,6 +26,8 @@ import com.mvp.jobportal.common.exception.ResourceNotFoundException;
 import com.mvp.jobportal.jobpost.entity.JobPost;
 import com.mvp.jobportal.jobpost.enums.JobPostStatus;
 import com.mvp.jobportal.jobpost.repository.JobPostRepository;
+import com.mvp.jobportal.jobseeker.entity.JobSeekerProfile;
+import com.mvp.jobportal.jobseeker.repository.JobSeekerProfileRepository;
 import com.mvp.jobportal.user.entity.User;
 import com.mvp.jobportal.user.repository.UserRepository;
 
@@ -37,6 +41,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         private final UserRepository userRepository;
         private final ApplicationMapper applicationMapper;
         private final ApplicationRepository applicationRepository;
+        private final JobSeekerProfileRepository jobSeekerProfileRepository;
 
         @Override
         @Transactional
@@ -71,16 +76,15 @@ public class ApplicationServiceImpl implements ApplicationService {
                         specification = specification.and(ApplicationSpecification.status(request.status()));
                 }
 
-                Page<ApplicationResponse> page = applicationRepository.findAll(specification, pageable)
-                                .map(applicationMapper::toResponse);
+                Page<ApplicationResponse> page = mapApplications(
+                                applicationRepository.findAll(specification, pageable));
                 return PageResponse.of(page);
         }
 
         @Override
         public PageResponse<ApplicationResponse> getForJob(UUID jobPostId, Pageable pageable) {
-                Page<ApplicationResponse> page = applicationRepository
-                                .findByJobPostIdWithRelations(jobPostId, pageable)
-                                .map(applicationMapper::toResponse);
+                Page<ApplicationResponse> page = mapApplications(
+                                applicationRepository.findByJobPostIdWithRelations(jobPostId, pageable));
                 return PageResponse.of(page);
         }
 
@@ -113,19 +117,35 @@ public class ApplicationServiceImpl implements ApplicationService {
                                 .and(ApplicationSpecification.activeRelations());
 
                 if (request.search() != null && !request.search().isBlank()) {
-                        specification = specification.and(
-                                        ApplicationSpecification.search(request.search()));
+                        specification = specification.and(ApplicationSpecification.search(request.search()));
                 }
 
                 if (request.status() != null) {
                         specification = specification.and(ApplicationSpecification.status(request.status()));
                 }
 
-                Page<ApplicationResponse> page = applicationRepository
-                                .findAll(specification, pageable)
-                                .map(applicationMapper::toResponse);
-
+                Page<ApplicationResponse> page = mapApplications(
+                                applicationRepository.findAll(specification, pageable));
                 return PageResponse.of(page);
+        }
+
+        private Page<ApplicationResponse> mapApplications(Page<Application> applications) {
+
+                List<UUID> userIds = applications.getContent()
+                                .stream()
+                                .map(application -> application.getUser().getId())
+                                .distinct()
+                                .toList();
+
+                Map<UUID, JobSeekerProfile> profiles = userIds.isEmpty()
+                                ? Map.of()
+                                : jobSeekerProfileRepository.findAllByUser_IdInAndUser_DeletedFalse(userIds)
+                                                .stream()
+                                                .collect(Collectors.toMap(
+                                                                profile -> profile.getUser().getId(),
+                                                                Function.identity()));
+
+                return applications.map(application -> applicationMapper.toResponse(application, profiles));
         }
 
 }

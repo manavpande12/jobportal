@@ -6,6 +6,8 @@ import org.springframework.data.repository.query.Param;
 
 import com.mvp.jobportal.jobseeker.entity.JobSeekerProfile;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,4 +24,6 @@ public interface JobSeekerProfileRepository extends JpaRepository<JobSeekerProfi
                         @Param("userId") UUID userId);
 
         boolean existsByUserId(UUID userId);
+
+        List<JobSeekerProfile> findAllByUser_IdInAndUser_DeletedFalse(Collection<UUID> userIds);
 }

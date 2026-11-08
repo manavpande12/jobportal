@@ -6,29 +6,29 @@ import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 
 const LogOutCard = () => {
-    const { mutateAsync, isPending } = useLogout();
+  const { mutateAsync, isPending } = useLogout();
 
-    const handleLogout = async () => {
-        try {
-            const res = await mutateAsync();
-            toast.success(res.message ?? "Logout Successfully");
-            window.location.href = "/";
-        } catch (err: unknown) {
-            showApiError(err);
-        }
-    };
+  const handleLogout = async () => {
+    try {
+      const res = await mutateAsync();
+      toast.success(res.message ?? "Logout Successfully");
+      window.location.assign("/");
+    } catch (err: unknown) {
+      showApiError(err);
+    }
+  };
 
-    return (
-        <SettingCard
-            title="LogOut"
-            description="Session ends here. You will be signed out from your account on this device."
-            isDestructive={true}
-            Icon={LogOut}
-            actionLabel="Sign Out"
-            loading={isPending}
-            onClick={handleLogout}
-        />
-    );
+  return (
+    <SettingCard
+      title="LogOut"
+      description="Session ends here. You will be signed out from your account on this device."
+      isDestructive={true}
+      Icon={LogOut}
+      actionLabel="Sign Out"
+      loading={isPending}
+      onClick={handleLogout}
+    />
+  );
 };
 
 export default LogOutCard;

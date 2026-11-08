@@ -1,6 +1,8 @@
 package com.mvp.jobportal.application.mapper;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -10,6 +12,7 @@ import com.mvp.jobportal.application.dto.JobSeekerResponse;
 import com.mvp.jobportal.application.entity.Application;
 import com.mvp.jobportal.application.enums.ApplicationStatus;
 import com.mvp.jobportal.jobpost.entity.JobPost;
+import com.mvp.jobportal.jobseeker.entity.JobSeekerProfile;
 import com.mvp.jobportal.skill.mapper.SkillMapper;
 import com.mvp.jobportal.user.entity.User;
 
@@ -29,11 +32,12 @@ public class ApplicationMapper {
                 .build();
     }
 
-    public ApplicationResponse toResponse(Application application) {
+    public ApplicationResponse toResponse(Application application, Map<UUID, JobSeekerProfile> profiles) {
+        User user = application.getUser();
         return ApplicationResponse.builder()
                 .id(application.getId())
                 .jobPost(toResponse(application.getJobPost()))
-                .jobseeker(toResponse(application.getUser()))
+                .jobseeker(toResponse(user, profiles.get(user.getId())))
                 .appliedAt(application.getAppliedAt())
                 .status(application.getStatus())
                 .build();
@@ -50,12 +54,14 @@ public class ApplicationMapper {
                 .build();
     }
 
-    private JobSeekerResponse toResponse(User user) {
+    private JobSeekerResponse toResponse(User user, JobSeekerProfile profile) {
         return JobSeekerResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
+                .yearsOfExperience(profile != null ? profile.getYearsOfExperience() : null)
+                .headline(profile != null ? profile.getHeadline() : null)
                 .build();
     }
 

@@ -9,5 +9,7 @@ public record JobSeekerResponse(
         UUID id,
         String firstName,
         String lastName,
+        String headline,
+        Integer yearsOfExperience,
         String email) {
 }
