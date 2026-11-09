@@ -3,7 +3,9 @@ package com.mvp.jobportal.recruiter.service.impl;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.mvp.jobportal.recruiter.dto.RecruiterPublicProfileResponse;
 import com.mvp.jobportal.recruiter.dto.RecruiterProfileResponse;
 import com.mvp.jobportal.recruiter.dto.UpdateRecruiterProfileRequest;
 import com.mvp.jobportal.recruiter.entity.RecruiterProfile;
@@ -14,17 +16,16 @@ import com.mvp.jobportal.user.dto.UpdateUserRequest;
 import com.mvp.jobportal.user.entity.User;
 import com.mvp.jobportal.user.service.UserService;
 import com.mvp.jobportal.common.exception.ResourceNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RecruiterProfileServiceImpl implements RecruiterProfileService {
     private final RecruiterProfileRepository recruiterProfileRepository;
     private final RecruiterProfileMapper recruiterProfileMapper;
     private final UserService userService;
 
-    @Transactional
     public RecruiterProfileResponse getByUserId(UUID userId) {
         RecruiterProfile recruiterProfile = recruiterProfileRepository.findActiveUserById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile not found."));
@@ -58,6 +59,14 @@ public class RecruiterProfileServiceImpl implements RecruiterProfileService {
     public void create(User user) {
         RecruiterProfile recruiterProfile = recruiterProfileMapper.toEntity(user);
         recruiterProfileRepository.save(recruiterProfile);
+    }
+
+    @Override
+    public RecruiterPublicProfileResponse getRecruiterPublicProfileById(UUID id) {
+        RecruiterProfile recruiterProfile = recruiterProfileRepository.findActiveUserById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found."));
+
+        return recruiterProfileMapper.toPublicResponse(recruiterProfile);
     }
 
 }

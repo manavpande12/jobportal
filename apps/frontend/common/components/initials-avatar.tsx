@@ -14,8 +14,8 @@ export default function InitialsAvatar({ name, size = "l" }: prop) {
     .slice(0, 2)
     .join("")
     .toUpperCase();
-  const shapeSize = size === "l" ? 88 : size === "m" ? 44 : 22;
-  const textSize = size === "l" ? 24 : size === "m" ? 16 : 8;
+  const shapeSize = size === "l" ? 111 : size === "m" ? 44 : 22;
+  const textSize = size === "l" ? 34 : size === "m" ? 16 : 8;
 
   return (
     <div

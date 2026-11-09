@@ -62,6 +62,7 @@ public class ApplicationMapper {
                 .lastName(user.getLastName())
                 .yearsOfExperience(profile != null ? profile.getYearsOfExperience() : null)
                 .headline(profile != null ? profile.getHeadline() : null)
+                .skills(skillMapper.toResponseList(profile != null ? profile.getSkills() : null))
                 .build();
     }
 

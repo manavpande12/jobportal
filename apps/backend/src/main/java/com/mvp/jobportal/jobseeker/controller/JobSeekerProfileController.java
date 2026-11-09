@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mvp.jobportal.jobseeker.dto.JobSeekerProfileResponse;
+import com.mvp.jobportal.jobseeker.dto.JobSeekerPublicProfileResponse;
 import com.mvp.jobportal.jobseeker.dto.UpdateJobSeekerProfileRequest;
 import com.mvp.jobportal.jobseeker.service.JobSeekerProfileService;
 import com.mvp.jobportal.common.dto.ApiResponse;
@@ -20,7 +22,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-@PreAuthorize("hasRole('JOB_SEEKER')")
 @RestController
 @Tag(name = "Job Seeker Profile")
 @RequestMapping("/api/job-seeker-profiles")
@@ -29,6 +30,7 @@ public class JobSeekerProfileController {
 
     private final JobSeekerProfileService jobSeekerProfileService;
 
+    @PreAuthorize("hasRole('JOB_SEEKER')")
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<JobSeekerProfileResponse>> getProfile() {
         UUID userId = SecurityUtils.getAuthenticatedUserId();
@@ -37,6 +39,7 @@ public class JobSeekerProfileController {
 
     }
 
+    @PreAuthorize("hasRole('JOB_SEEKER')")
     @PatchMapping("/me")
     public ResponseEntity<ApiResponse<Void>> updateProfile(
             @Valid @RequestBody UpdateJobSeekerProfileRequest request) {
@@ -44,6 +47,14 @@ public class JobSeekerProfileController {
         UUID userId = SecurityUtils.getAuthenticatedUserId();
         jobSeekerProfileService.update(userId, request);
         return ResponseEntity.ok(ApiResponse.success("Profile Update Successfully.", null));
+    }
+
+    @GetMapping("/public/{id}")
+    public ResponseEntity<ApiResponse<JobSeekerPublicProfileResponse>> getJobSeekerPublicProfileById(
+            @PathVariable UUID id) {
+        JobSeekerPublicProfileResponse res = jobSeekerProfileService.getJobSeekerPublicProfileById(id);
+        return ResponseEntity.ok(ApiResponse.success("Public Profile Fetched Successfully.", res));
+
     }
 
 }

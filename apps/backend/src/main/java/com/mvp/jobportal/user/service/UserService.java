@@ -8,6 +8,7 @@ import com.mvp.jobportal.user.dto.UpdatePasswordRequest;
 import com.mvp.jobportal.user.dto.UpdateUserRequest;
 import com.mvp.jobportal.user.dto.UserResponse;
 import com.mvp.jobportal.user.entity.User;
+import com.mvp.jobportal.user.enums.RoleType;
 
 public interface UserService {
     UserResponse getById(UUID id);
@@ -19,4 +20,6 @@ public interface UserService {
     void changePassword(UUID id, ChangePasswordRequest request);
 
     void updatePassword(UUID id, UpdatePasswordRequest request);
+
+    RoleType getRoleById(UUID id);
 }

@@ -55,6 +55,7 @@ public class ApplicationController {
                 return ResponseEntity.ok(ApiResponse.success("Applications fetched successfully.", applications));
         }
 
+        @PreAuthorize("hasRole('RECRUITER')")
         @PatchMapping("/{id}/status")
         public ResponseEntity<ApiResponse<Void>> updateStatus(
                         @PathVariable UUID id,

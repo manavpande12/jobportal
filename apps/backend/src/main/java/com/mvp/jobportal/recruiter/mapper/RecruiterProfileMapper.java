@@ -3,6 +3,7 @@ package com.mvp.jobportal.recruiter.mapper;
 import org.springframework.stereotype.Component;
 
 import com.mvp.jobportal.common.util.PatchUtils;
+import com.mvp.jobportal.recruiter.dto.RecruiterPublicProfileResponse;
 import com.mvp.jobportal.recruiter.dto.RecruiterProfileResponse;
 import com.mvp.jobportal.recruiter.dto.UpdateRecruiterProfileRequest;
 import com.mvp.jobportal.recruiter.entity.RecruiterProfile;
@@ -26,6 +27,23 @@ public class RecruiterProfileMapper {
                 .lastName(recruiterProfile.getUser().getLastName())
                 .createdAt(recruiterProfile.getUser().getCreatedAt())
                 .updatedAt(recruiterProfile.getUpdatedAt())
+                .designation(recruiterProfile.getDesignation())
+                .build();
+    }
+
+    public RecruiterPublicProfileResponse toPublicResponse(RecruiterProfile recruiterProfile) {
+        if (recruiterProfile == null) {
+            return null;
+        }
+        return RecruiterPublicProfileResponse.builder()
+                .id(recruiterProfile.getUser().getId())
+                .companyId(
+                        recruiterProfile.getCompany() != null
+                                ? recruiterProfile.getCompany().getId()
+                                : null)
+                .email(recruiterProfile.getUser().getEmail())
+                .firstName(recruiterProfile.getUser().getFirstName())
+                .lastName(recruiterProfile.getUser().getLastName())
                 .designation(recruiterProfile.getDesignation())
                 .build();
     }

@@ -43,7 +43,6 @@ export function ApplicantsList({ data, loading }: Prop) {
         return (
           <Card
             key={application.id}
-            onClick={() => router.push(`/jobs/${application.jobPost.companySlug}/${application.jobPost.id}`)}
             className="relative w-full cursor-pointer overflow-hidden p-0! bg-background shadow-sm transition-all duration-300 hover:shadow-xl ring-0 border"
           >
             <CardContent className="relative z-10 p-3 gap-2 flex flex-col items-center justify-center w-full!">
@@ -67,19 +66,20 @@ export function ApplicantsList({ data, loading }: Prop) {
                   </span>
                   <div className="flex gap-2 items-center text-muted-foreground text-xs">
                     <BriefcaseBusiness className="size-4" />
-                    <span>{application.jobseeker.yearsOfExperience ?? 0}+ yrs exp</span>
+                    <span>{application.jobseeker.yearsOfExperience != null ? `${application.jobseeker.yearsOfExperience}+ yrs exp` : "Fresher"}</span>
                   </div>
                 </div>
               </div>
               <div className="flex w-full gap-2 overflow-x-auto scrollbar-none">
-                {application.jobPost.skills.slice(0, scount).map((skill) => (
+                {(application?.jobseeker?.skills ?? []).slice(0, scount).map((skill) => (
                   <div key={skill.id} style={boxClr} className="shrink-0 rounded-xl px-2.5 py-1 text-xs font-bold whitespace-nowrap">
                     {skill.name}
                   </div>
                 ))}
-                {application.jobPost.skills.length > scount && (
+
+                {(application?.jobseeker?.skills?.length ?? 0) > scount && (
                   <div style={boxClr} className="shrink-0 rounded-xl px-2.5 py-1 text-xs font-bold whitespace-nowrap">
-                    + {application.jobPost.skills.length - scount} more
+                    + {(application?.jobseeker?.skills?.length ?? 0) - scount} more
                   </div>
                 )}
               </div>
@@ -111,7 +111,12 @@ export function ApplicantsList({ data, loading }: Prop) {
               <Separator className="w-full" />
               <div className="w-full flex justify-center items-center flex-col gap-2">
                 <div className="flex w-full min-w-0 gap-2">
-                  <Button variant="outline" style={{ backgroundColor: hsl(clr) }} className="min-w-0 flex-1 text-white hover:text-white">
+                  <Button
+                    onClick={() => router.push(`/profile/${application.jobseeker.id}`)}
+                    variant="outline"
+                    style={{ backgroundColor: hsl(clr) }}
+                    className="min-w-0 flex-1 text-white hover:text-white"
+                  >
                     <User className="size-4 shrink-0" />
                     <span className="truncate">View Profile</span>
                   </Button>

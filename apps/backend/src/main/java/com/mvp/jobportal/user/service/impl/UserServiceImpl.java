@@ -91,4 +91,11 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.password()));
         userRepository.save(user);
     }
+
+    @Override
+    public RoleType getRoleById(UUID id) {
+        User user = userRepository.findActiveUserById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+        return user.getRole();
+    }
 }

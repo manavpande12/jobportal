@@ -3,6 +3,7 @@ package com.mvp.jobportal.jobseeker.service.impl;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
 import com.mvp.jobportal.jobseeker.dto.JobSeekerProfileResponse;
+import com.mvp.jobportal.jobseeker.dto.JobSeekerPublicProfileResponse;
 import com.mvp.jobportal.jobseeker.dto.UpdateJobSeekerProfileRequest;
 import com.mvp.jobportal.jobseeker.entity.JobSeekerProfile;
 import com.mvp.jobportal.jobseeker.mapper.JobSeekerProfileMapper;
@@ -61,6 +62,14 @@ public class JobSeekerProfileImpl implements JobSeekerProfileService {
     public void create(User user) {
         JobSeekerProfile jobSeekerProfile = jobSeekerProfileMapper.toEntity(user);
         jobSeekerProfileRepository.save(jobSeekerProfile);
+    }
+
+    @Override
+    public JobSeekerPublicProfileResponse getJobSeekerPublicProfileById(UUID id) {
+        JobSeekerProfile jobSeekerProfile = jobSeekerProfileRepository.findActiveUserById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found."));
+
+        return jobSeekerProfileMapper.toPublicResponse(jobSeekerProfile);
     }
 
 }

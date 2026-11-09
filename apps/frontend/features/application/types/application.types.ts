@@ -25,6 +25,7 @@ export type JobSeekerResponse = {
   lastName: string;
   email: string;
   yearsOfExperience: number | null;
+  skills: Skills[] | null;
   headline: string | null;
 };
 

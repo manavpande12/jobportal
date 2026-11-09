@@ -10,12 +10,34 @@ import InfoItem from "@/common/components/info-item";
 import { format } from "date-fns";
 import JobApplicationAction from "./JobApplicationAction";
 import { JobPostStatus } from "@/features/jobpost/types/jobpost.types";
+import { copyLink, getSocialShareUrl } from "@/common/utils/share";
+import { toast } from "sonner";
 
 export default function JobDetail({ id }: { id: string }) {
   const { data, isLoading, isError } = useGetJobById(id);
   const clr = getColorFromText(`${data?.title}-${data?.id}`);
   const boxClr = { backgroundColor: hsl(clr, 0.05), borderColor: hsl(clr, 0.1), color: hsl(clr) };
   const neBoxClr = { backgroundColor: hsl(clr), borderColor: hsl(clr), color: clr.l > 60 ? "#000" : "#fff" };
+
+  const handleSocialShare = (platform: string) => {
+    if (!data || isLoading) return;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL;
+    const url = `${baseUrl}/jobs/${data.slug}/${data.id}`;
+    const title = `${data.title} at ${data.companyName}`;
+    if (platform === "Copy Link") {
+      copyLink(url)
+        .then(() => toast.success("Job link copied!"))
+        .catch(() => toast.error("Unable to copy job link"));
+      return;
+    }
+    const shareUrl = getSocialShareUrl(platform, url, title);
+    if (!shareUrl) {
+      toast.error(`Sharing on ${platform} is not supported.`);
+      return;
+    }
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
+  };
+
   if (isLoading) {
     return <Skeleton />;
   }
@@ -41,15 +63,21 @@ export default function JobDetail({ id }: { id: string }) {
     >
       {/* Effects */}
       <div
-        className="absolute left-1/2 top-20 h-80 w-80 -translate-x-1/2 rounded-full blur-[120px] animate-pulse"
+        className="pointer-events-none absolute left-1/2 top-20 h-80 w-80 -translate-x-1/2 rounded-full blur-[120px] animate-pulse"
         style={{ backgroundColor: `hsl(${clr.h} ${clr.s}% ${clr.l}% / 0.15)` }}
       />
       <div
-        className="absolute right-0 top-0 h-72 w-72 rounded-full blur-[120px] animate-pulse"
+        className="pointer-events-none absolute right-0 top-0 h-72 w-72 rounded-full blur-[120px] animate-pulse"
         style={{ backgroundColor: `hsl(${clr.h} ${clr.s}% ${clr.l}% / 0.10)` }}
       />
-      <Rocket style={{ color: `hsl(${clr.h} ${clr.s}% ${clr.l}% / 0.05)` }} className="absolute right-0 top-10 size-72 rotate-12" />
-      <Grip style={{ color: `hsl(${clr.h} ${clr.s}% ${clr.l}% / 0.05)` }} className="absolute -left-20 bottom-0 size-72 rotate-45 " />
+      <Rocket
+        style={{ color: `hsl(${clr.h} ${clr.s}% ${clr.l}% / 0.05)` }}
+        className="pointer-events-none absolute right-0 top-10 size-72 rotate-12"
+      />
+      <Grip
+        style={{ color: `hsl(${clr.h} ${clr.s}% ${clr.l}% / 0.05)` }}
+        className="pointer-events-none absolute -left-20 bottom-0 size-72 rotate-45"
+      />
       {/* Main */}
       <div className="grid grid-cols-1 xl:grid-cols-12 xl:gap-6 gap-y-6 sm:p-12 ">
         {/* Left */}
@@ -88,9 +116,12 @@ export default function JobDetail({ id }: { id: string }) {
                 {socialIcons.map(({ icon: Icon, label }) => (
                   <button
                     key={label}
+                    type="button"
                     title={label}
+                    aria-label={`Share job on ${label}`}
+                    onClick={() => handleSocialShare(label)}
                     style={boxClr}
-                    className="flex size-12 items-center justify-center rounded-full transition-all duration-200 hover:bg-background"
+                    className="relative z-10 flex size-12 cursor-pointer items-center justify-center rounded-full transition-all duration-200 hover:bg-background"
                   >
                     <Icon className="size-6" />
                   </button>

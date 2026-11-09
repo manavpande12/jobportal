@@ -24,18 +24,18 @@ public class SkillMapper {
     }
 
     public List<SkillResponse> toResponseList(Set<Skill> skills) {
-        return skills.stream()
-                .sorted(Comparator.comparing(Skill::getName))
-                .map(this::toResponse)
-                .toList();
-
+        return skills == null ? List.of()
+                : skills.stream()
+                        .sorted(Comparator.comparing(Skill::getName))
+                        .map(this::toResponse)
+                        .toList();
     }
 
     public List<SkillResponse> toResponseList(List<Skill> skills) {
-        return skills.stream()
-                .sorted(Comparator.comparing(Skill::getName))
-                .map(this::toResponse)
-                .toList();
-
+        return skills == null ? List.of()
+                : skills.stream()
+                        .sorted(Comparator.comparing(Skill::getName))
+                        .map(this::toResponse)
+                        .toList();
     }
 }
