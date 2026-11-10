@@ -1,10 +1,9 @@
-import SolutionSection from "@/features/landing/components/SolutionSection";
-import FaqSection from "@/features/landing/components/FaqSection";
-import HeroSection from "@/features/landing/components/HeroSection";
-import ProblemSection from "@/features/landing/components/ProblemSection";
-import ActionSection from "@/features/landing/components/ActionSection";
-import WhyChooseSection from "@/features/landing/components/WhyChooseSection";
-
+import SolutionSection from "@/features/landing/components/overview/SolutionSection";
+import FaqSection from "@/features/landing/components/overview/FaqSection";
+import HeroSection from "@/features/landing/components/overview/HeroSection";
+import ProblemSection from "@/features/landing/components/overview/ProblemSection";
+import ActionSection from "@/features/landing/components/overview/ActionSection";
+import WhyChooseSection from "@/features/landing/components/overview/WhyChooseSection";
 
 const Home = () => {
   return (
@@ -17,5 +16,5 @@ const Home = () => {
       <ActionSection />
     </>
   );
-}
+};
 export default Home;

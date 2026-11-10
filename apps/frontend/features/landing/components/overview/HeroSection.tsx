@@ -3,11 +3,11 @@ import { Input } from "@/common/components/ui/input";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/common/components/ui/select";
 import { ChevronRight, Hash, Search } from "lucide-react";
 import Image from "next/image";
-import { skills } from "../constants/skills";
-import { popularSearches } from "../constants/search-titles";
+import { skills } from "../../constants/skills";
+import { popularSearches } from "../../constants/search-titles";
 const HeroSection = () => {
   return (
-    <section className="relative z-0 min-h-screen bg-background px-4 sm:px-12 flex 2xl:flex-row flex-col">
+    <section className="relative z-0 min-h-[calc(100vh-5.25rem)] bg-background px-4 sm:px-12 flex 2xl:flex-row flex-col">
       {/* Left Side */}
       <div className="flex flex-1 2xl:flex-2 justify-center flex-col">
         {/* Content */}
